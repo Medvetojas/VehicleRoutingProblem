@@ -12,6 +12,10 @@ Felhasznált csomagok: deepcopy, random, matplotlib, typing
      - Járművek száma (másszóval futárok)
      - Iterációk száma
      - Generációk száma
+     
+Példa:
+     
+![](https://github.com/Medvetojas/VehicleRoutingProblem/blob/main/input_example.png?raw=true)
 
 2. A program 1 és 100 között legenerálja a városok x és y koordinátáit, letárolja őket egy mátrixba, majd pedig egy újabb mátrixot készít a városok közti távolságokból. Ezután a járműveknek ki lesznek osztva a városok, figyelembevéve az egymástól való távolságukat.
 
@@ -25,10 +29,12 @@ Felhasznált csomagok: deepcopy, random, matplotlib, typing
 
 4. Kirajzolásra kerül a legjobb megoldás, annak hossza. A genetikus algoritmus futása alatt a túlélési fázisnál is megjeleníti a konzol a "túlélő" megoldást.
 
-### Hibák
+Példák:
 
-A feladat részletes kommentezést tartalmaz, a változók angolul vannak, a komment viszont magyar, így kicsit hunglish jellege van az egésznek.  
-Típust adtam minden függvény visszatérési értékének és paramétereinek is, hogy könnyebben átlássam a dolgokat (*hello C#*), ezért volt szükség a typing csomagra.
+
+![](https://github.com/Medvetojas/VehicleRoutingProblem/blob/main/solution_example.png?raw=true)
+![](https://github.com/Medvetojas/VehicleRoutingProblem/blob/main/plot_example.png?raw=true)
+
 
 ## Felhasznált irodalomak és egyéb források, segítségek
 A program elkészítéséhez a következő forrásokat használtam:
@@ -36,3 +42,8 @@ A program elkészítéséhez a következő forrásokat használtam:
 * [Agárdi Anita: A járatszervezési probléma megoldása autonóm, elektromos járművek esetén c. cikke](http://www.tdk.uni-miskolc.hu/files/_elso_ot_oldala_vegleges.pdf)
 
 A fentieken felül, a megoldási logika, és az adatok tárolásához szükséges adatstruktúra "kitalálásához" Piller Imre segítségét kértem.
+
+## Hibák
+
+A feladat részletes kommentezést tartalmaz, a változók angolul vannak, a komment viszont magyar, így kicsit hunglish jellege van az egésznek.  
+Típust adtam minden függvény visszatérési értékének és paramétereinek is, hogy könnyebben átlássam a dolgokat (*hello C#*), ezért volt szükség a typing csomagra. Ez sem biztos, hogy konvenció követő, pozitív dolog.
