@@ -1,4 +1,5 @@
-import matplotlib as plot
+import matplotlib.pyplot as plot
+
 
 def plot_solution(city_matrix: list[list[int]], best: list[list[int]]):  # Kirajzolás matplotlib segítségével
     plot.plot(city_matrix[0][0], city_matrix[0][1], 'ro')
@@ -15,5 +16,4 @@ def plot_solution(city_matrix: list[list[int]], best: list[list[int]]):  # Kiraj
             else:
                 plot.plot([city_matrix[best[i][k]][0], city_matrix[best[i][k + 1]][0]],
                           [city_matrix[best[i][k]][1], city_matrix[best[i][k + 1]][1]], colors[i % 10])
-
     plot.show()
