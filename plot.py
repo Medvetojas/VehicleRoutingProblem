@@ -2,6 +2,7 @@ import matplotlib.pyplot as plot
 
 
 def plot_solution(city_matrix: list[list[int]], best: list[list[int]]):  # Kirajzolás matplotlib segítségével
+    plot.figure(dpi=600)
     plot.plot(city_matrix[0][0], city_matrix[0][1], 'ro')
     plot.annotate('Depot', (city_matrix[0][0], city_matrix[0][1]))
     for i in range(1, len(city_matrix)):

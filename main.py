@@ -9,7 +9,7 @@ def main():
     city_distance_matrix = get_all_city_distance(city_matrix)
     initial_routes = create_routes(int(input("Vehicle amount: ")), city_distance_matrix, city_matrix)
     print("Initial solution: " + str(initial_routes))  # Kiindulási útvonal printelése
-    best, length = genetic_algorithm(
+    best, length = begin_algorithm(
         initial_routes,
         city_distance_matrix,
         int(input("Iteration amount: ")),
