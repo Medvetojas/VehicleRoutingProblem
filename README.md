@@ -23,8 +23,8 @@ Példa:
      - feltölti a populációt a kezdeti megoldással, majd kiszámolja a fitness értéküket
      - végrehajtja a mutációt, mely két autó között két várost felcserél
      - végrehajtja a keresztezést (rekombinációt), mely kiválasztja az egymás melletti (végül az utolsó és az első) útvonalakat, és közöttük cserél
-       - mivel 2D-ben nehéz a keresztezés, ezért egy darab vektorrá alakítja az útvonalakat, majd visszaalakítja azt a rekombináció után 2D-re
-       - a depót eltávolítjuk átmenetileg a folyamat erejéig, majd visszateszi azt
+       - mivel 2D-ben nehéz a keresztezés, vektor formában lesz végrehajtva a rekombináció, a folyamat végén kerül visszaalakításra mátrixszá
+       - a depót eltávolítja átmenetileg a folyamat erejéig, majd visszateszi azt
      - túlélési valószínűség alapján kiválasztjuk a legjobb generációt, mely egy kész megoldásnak tekinthető
 
 4. Kirajzolásra kerül a legjobb megoldás, annak hossza. A genetikus algoritmus futása alatt a túlélési fázisnál is megjeleníti a konzol a "túlélő" megoldást.
