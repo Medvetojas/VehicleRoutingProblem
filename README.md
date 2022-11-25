@@ -39,6 +39,7 @@ Példák:
 ## Felhasznált irodalomak és egyéb források, segítségek
 A program elkészítéséhez a következő forrásokat használtam:
 * A feladatkiírásban szereplő mutáció példa, illetve túlélési valószínűség képlet
+* Fazekas Levente: [Genetikus algoritmusok](https://ai.leventefazekas.hu/lessons/2022-10-18-genetic-algorithms/) és [TSP probléma](https://ai.leventefazekas.hu/lessons/2022-10-11-travelling-salesman) tananyagai
 * [Agárdi Anita: A járatszervezési probléma megoldása autonóm, elektromos járművek esetén c. cikke](http://www.tdk.uni-miskolc.hu/files/_elso_ot_oldala_vegleges.pdf)
 
 A fentieken felül, a megoldási logika, és az adatok tárolásához szükséges adatstruktúra "kitalálásához" Piller Imre segítségét kértem.
