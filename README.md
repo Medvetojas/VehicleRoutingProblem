@@ -23,8 +23,8 @@ Példa:
      - feltölti a populációt a kezdeti megoldással, majd kiszámolja a fitness értéküket
      - végrehajtja a mutációt, mely két autó között két várost felcserél
      - végrehajtja a keresztezést (rekombinációt), mely kiválasztja az egymás melletti (végül az utolsó és az első) útvonalakat, és közöttük cserél
-       - mivel 2D-ben nehéz a keresztezés, ezért egy darab vektorrá alakítja az útvonalakat, majd visszaalakítja azt a rekombináció után 2D-re
-       - a depót eltávolítjuk átmenetileg a folyamat erejéig, majd visszateszi azt
+       - mivel 2D-ben nehéz a keresztezés, vektor formában lesz végrehajtva a rekombináció, a folyamat végén kerül visszaalakításra mátrixszá
+       - a depót eltávolítja átmenetileg a folyamat erejéig, majd visszateszi azt
      - túlélési valószínűség alapján kiválasztjuk a legjobb generációt, mely egy kész megoldásnak tekinthető
 
 4. Kirajzolásra kerül a legjobb megoldás, annak hossza. A genetikus algoritmus futása alatt a túlélési fázisnál is megjeleníti a konzol a "túlélő" megoldást.
@@ -39,8 +39,9 @@ Példák:
 ## Felhasznált irodalomak és egyéb források, segítségek
 A program elkészítéséhez a következő forrásokat használtam:
 * A feladatkiírásban szereplő mutáció példa, illetve túlélési valószínűség képlet
-* Fazekas Levente: [Genetikus algoritmusok](https://ai.leventefazekas.hu/lessons/2022-10-18-genetic-algorithms/) és [TSP probléma](https://ai.leventefazekas.hu/lessons/2022-10-11-travelling-salesman) tananyagai
+* Fazekas Levente: [Genetikus algoritmusok](https://ai.leventefazekas.hu/lessons/2022-10-18-genetic-algorithms) és [TSP probléma](https://ai.leventefazekas.hu/lessons/2022-10-11-travelling-salesman) tananyagai
 * [Agárdi Anita: A járatszervezési probléma megoldása autonóm, elektromos járművek esetén c. cikke](http://www.tdk.uni-miskolc.hu/files/_elso_ot_oldala_vegleges.pdf)
+* [Matplotlib Wiki oldala](https://matplotlib.org/stable/gallery)
 
 A fentieken felül, a megoldási logika, és az adatok tárolásához szükséges adatstruktúra "kitalálásához" Piller Imre segítségét kértem.
 
