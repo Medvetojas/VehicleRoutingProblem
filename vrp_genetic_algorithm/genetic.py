@@ -267,7 +267,7 @@ def get_solution_from_survival_probability(population_lengths: list[int], genera
     # ha az új generáció jobb, mint a valaha megtalált legjobb eredmény, akkor elmentjük
     if population_lengths[route_order_in_population[counter]] < best_solution_total_length:
         best_solution_total_length = population_lengths[route_order_in_population[counter]]
-        best_route, best_solution = population[route_order_in_population[counter]]
+        best_route = best_solution = population[route_order_in_population[counter]]
         print("\nBetter generation has been found: ", str(best_route) + " --- Length: ", str(best_solution_total_length))
 
     return best_route, best_solution, best_solution_total_length
