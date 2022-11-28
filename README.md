@@ -24,7 +24,7 @@ Example:
 3. The genetic algorithm begins, which - after filling the population with the initial data and calculating initial fitness values - does the following iteration times (*a maximum of 350 iterations, if there are no improvements consecutively*):
 
      - executes mutation, which swaps two cities between two vehicles
-     - executes crossover (recombination), which selects two adjacent (at the last iteration, the first and last) routes, then swaps between them
+     - executes crossover (recombination), which selects two adjacent (at the last iteration, the first and last) routes, makes an intersections (the part), and makes a merge
        - since crossover is hard in 2D, the recombination is made in a vector form, but it will be converted back to a matrix
        - the depot is removed temporarily from the routes until the procedure ends, but then it is readded
      - selects the best generation based on surviving probability, which can be considered a solution, albeit not necessarily the best and final one
@@ -79,7 +79,7 @@ Példa:
 3. Elindul a genetikus algoritmus, mely - miután feltölti a populációt a kezdeti adatokkal és kezdeti fitness értéket számol - iterációszor (*maximum 350-szer, ha nem történik javulás*) végrehajtja röviden az alábbiakat:
 
      - végrehajtja a mutációt, mely két autó között két várost felcserél
-     - végrehajtja a keresztezést (rekombinációt), mely kiválasztja az egymás melletti (végül az utolsó és az első) útvonalakat, és közöttük cserél
+     - végrehajtja a keresztezést (rekombinációt), mely kiválasztja az egymás melletti (végül az utolsó és az első) útvonalakat, készít egy kimetszést, majd egyesíti a két útvonalat
        - mivel 2D-ben nehéz a keresztezés, vektor formában lesz végrehajtva a rekombináció, a folyamat végén kerül visszaalakításra mátrixszá
        - a depót eltávolítja átmenetileg a folyamat erejéig, majd visszateszi azt
      - túlélési valószínűség alapján kiválasztjuk a legjobb generációt, mely egy kész megoldásnak tekinthető, de nem feltétlenül a legjobbnak és a véglegesnek
