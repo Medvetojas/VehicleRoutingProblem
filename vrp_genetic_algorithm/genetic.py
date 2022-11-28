@@ -115,7 +115,7 @@ def mutation(routes: list[list[int]], population: list[list[int]]) -> list[list[
     return population
 
 
-def crossover(route: int, routes_1: list[list[int]], routes_2: list[list[int]]) -> list[list[int]]:  # rekombináció
+def crossover(initial_routes_length: int, routes_1: list[list[int]], routes_2: list[list[int]]) -> list[list[int]]:  # rekombináció
     routes_1 = delete_depot_from_array(routes_1)  # paraméterként megadott 1. útvonalak
     routes_2 = delete_depot_from_array(routes_2)  # paraméterként megadott 2. útvonalak
     # ezek tartalmaznak 1-1 teljes megoldást, azaz több autót, több várost
@@ -124,29 +124,29 @@ def crossover(route: int, routes_1: list[list[int]], routes_2: list[list[int]]) 
     routes2_cities = []  # a routes_2 adatait tartalmazza, de 1 dimenziós vektorként, nem 2 dimenziós mátrixként
     # 2 dimenzióban nehéz a rekombináció, ezért alakítunk át
 
-    for i in range(route):  # itt alakítunk mátrixból vektorrá
+    for i in range(initial_routes_length):  # itt alakítunk mátrixból vektorrá
         routes_2_size_counter.append(0)
         for k in range(len(routes_2[i])):  # végigmegyünk a routes_2 minden elemén
             routes2_cities += [routes_2[i][k]]  # hozzáadjuk a vektorunkhoz a mátrix minden elemét sorban
             routes_2_size_counter[i] += 1  # az adott indexhez incrementálunk, így tudjuk hány város tartozik hozzá
 
     # random 2 pontot választunk a metszéshez
-    if (int(route / 2)) == 0:  # ha TSP a feladat
+    if (int(initial_routes_length / 2)) == 0:  # ha TSP a feladat
         first_part = 0
     else:  # ha VRP a feladat
-        first_part = random.randint(0, int(route / 2) - 1)
-    second_part = random.randint(int(route / 2), int(route) - 1)
+        first_part = random.randint(0, int(initial_routes_length / 2) - 1)
+    second_part = random.randint(int(initial_routes_length / 2), int(initial_routes_length) - 1)
 
-    pointer = 0  # a kivágott elemek kezdőpontja az első dimenzióban
+    pointer = 0  # a kivágott autók kezdőpontja az első dimenzióban
     for i in range(first_part):
         pointer += routes_2_size_counter[i]
 
-    pointer_length = 0  # a kivágott elemek hossza az első dimenzióban
+    pointer_length = 0  # a kivágott autók "hossza" az első dimenzióban
     for i in range(second_part):
         pointer_length += routes_2_size_counter[i]
     pointer_length -= pointer  # ki kell vonni, hogy jó hosszúságban vágjunk ki
 
-    intersection = get_intersection_vector(first_part, second_part, routes_1)  # a kivágott rész tárolása 1 dimenzióban
+    intersection = get_intersection_vector(first_part, second_part, routes_1)  # a kivágott rész (1 dimenzióban)
 
     crossovered_array = get_crossovered_array(routes2_cities, first_part, second_part, intersection)
     # a már rekombinált adat 1 dimenzióban, később alakítjuk vissza 2 dimenzióra
@@ -156,9 +156,9 @@ def crossover(route: int, routes_1: list[list[int]], routes_2: list[list[int]]) 
     return final_array
 
 
-def get_intersection_vector(first_part: int, second_part: int, route: list[list[int]]) -> list[int]:
-    # a metszés itt tárolódik, de 2 dimenzióban (mátrixként). Ezt itt átalakítjuk a függvényben 1 dimenzióra (vektorra).
-    intersection_temp = route[first_part:second_part]
+def get_intersection_vector(first_part: int, second_part: int, routes_1: list[list[int]]) -> list[int]:
+    # A metszés itt tárolódik, de 2 dimenzióban (mátrixként). Ezt itt átalakítjuk a függvényben 1 dimenzióra (vektorra).
+    intersection_temp = routes_1[first_part:second_part]  # a kimetszett rész
     intersection_vector = []  # vektor
     for i in range(len(intersection_temp)):  # mátrix átalakítása vektorrá
         for k in range(len(intersection_temp[i])):
@@ -167,39 +167,39 @@ def get_intersection_vector(first_part: int, second_part: int, route: list[list[
     return intersection_vector
 
 
-def get_crossovered_array(route: list[list[int]], first_part: int, second_part: int, intersection: list[int]):
-    #  Egydimenzióban végrehajtja a keresztezést
+def get_crossovered_array(routes2_cities: list[list[int]], first_part: int, second_part: int, intersection: list[int]):
+    # Egydimenzióban végrehajtja a keresztezést
     index = 0
     crossovered_array = []
     # beillesztjük az adott generációba a kivágott elemeket
-    while len(crossovered_array) < len(route):  # addig megyünk, amíg minden város ki nem lett újból osztva
-        if first_part <= index < second_part:  # ha elértük a metszés pontját, akkor beleillesztjük
+    while len(crossovered_array) < len(routes2_cities):  # addig megyünk, amíg minden város ki nem lett újból osztva
+        if first_part <= index < second_part:  # ha az index a first_p és second_p közt van, akkor a metszésben vagyunk
             for k in intersection:  # végigmegyünk a metszés minden elemén, és hozzáadjuk a tömbünkhöz
                 crossovered_array.append(k)
             index = second_part  # kilépési feltétel állítása
-        for k in range(len(route)):  # végigmegyünk minden városon
+        for k in range(len(routes2_cities)):  # végigmegyünk minden városon
             # megnézzük, hogy a vizsgált város benne van-e a kivágásban, vagy már bele lett-e rakva 1x az új tömbbe
-            if route[k] not in intersection and route[k] not in crossovered_array:
-                crossovered_array.append(route[k])
+            if routes2_cities[k] not in intersection and routes2_cities[k] not in crossovered_array:
+                crossovered_array.append(routes2_cities[k])
                 index += 1
                 break
     # pl: [2,5,1,3,4,6] és [1,4,2,5,3,6] -> [4,2,1,3,5,6]
     return crossovered_array
 
 
-def get_final_array(route_sizes: list[int], crossovered_array: list[int]) -> list[list[int]]:
+def get_final_array(routes_2_size_counter: list[int], crossovered_array: list[int]) -> list[list[int]]:
     #  1 dimenziós értékek visszaállítása 2 dimenzióssá
     index = 0
     temp_array = []  # 1-1 autó által tartalmazott városok vektora
     final_array = []  # a temp_array segítségével jön létre, így minden indexe 1-1 autót tartalmaz.
     # Ez a változó tartalmazza a visszaalakított 2 dimenziós mátrixot az 1 dimenziós vektorból
 
-    for i in range(len(route_sizes)):  # végigmegyünk az autók számán
+    for i in range(len(routes_2_size_counter)):  # végigmegyünk az autók számán
         temp_array.append(0)  # visszarakjuk az első elemre a depót
-        for k in range(route_sizes[i]):  # végigmegyünk az adott autó városszámán
-            temp_array.append(crossovered_array[index])  # hozzáadjuk az ideiglenes változóhoz a várost
+        for k in range(routes_2_size_counter[i]):  # végigmegyünk az adott autó városszámán
+            temp_array.append(crossovered_array[index])  # hozzáadjuk az ideiglenes változóhoz magát a várost
             index += 1
-        final_array.append(temp_array)  # hozzáadjuk a mátrixhoz az autót és annak városait
+        final_array.append(temp_array)  # hozzáadjuk a mátrixhoz az autót (illetve a városokat, az útvonalat)
         temp_array = []  # ürítjük az ideiglenes változót a következő autó számára
     # pl: [2,5,1,3,4,6] -> [[0,2,5],[0,1,3],[0,4,6]]
     return final_array
