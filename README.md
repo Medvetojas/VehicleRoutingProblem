@@ -10,6 +10,7 @@ Packages used: deepcopy, random, matplotlib, typing
 ## Steps of solution
 
 1. The program asks for the input of the user for the following data:
+
      - Number of cities (including the depot)
      - Number of vehicles
      - Number of iterations
@@ -65,6 +66,7 @@ Felhasznált csomagok: deepcopy, random, matplotlib, typing
 ## Megoldás lépései
 
 1. A program bekéri az inputokat a felhasználótól:
+
      - A városok száma (a depóval együtt)
      - Járművek száma (másszóval futárok)
      - Iterációk száma
