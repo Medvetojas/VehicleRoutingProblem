@@ -6,45 +6,49 @@ import random
 def begin_algorithm(initial_routes: list[list[int]], city_distance_matrix: dict[tuple[int, int]],
                     iterations: int, generations: int) -> Tuple[list[list[int]], int]:
     # a fő folyamat, a genetikus algoritmus
-    best_route = []  # egy generálás által túlélt generáció
-    best_solution_total_length = 0  # a túlélt generáció hossza
+    best_routes = []  # egy generálás által túlélt generáció
+    best_routes_total_length = 0  # a túlélt generáció hossza
     age_of_best_routes = 0  # a túlélt generáció életkora
 
     for i in range(len(initial_routes)):  # feltöltjük a változókat a kiindulási adatokkal
-        best_route.append(initial_routes[i])
-        best_solution_total_length += fitness(city_distance_matrix, initial_routes[i])
+        best_routes.append(initial_routes[i])
+        best_routes_total_length += fitness(city_distance_matrix, initial_routes[i])
 
-    best_solution = best_route  # kezdetben megkapja a generált útvonalat, és a hosszát, hogy élettartamot számoljunk
-    best_route_previous_length = best_solution_total_length
+    best_routes_previous_length = best_routes_total_length  # ...és a hosszát, hogy élettartamot számoljunk
 
     population = []  # egy generáláson belüli több generáció tömbje
     population_lengths = []  # 1-1 generáció hossza
     for _ in range(generations):  # feltöltjük az alap adatokkal
-        population.append(best_route)
+        population.append(best_routes)
         population_lengths.append(0)  # a hosszokat 0-ra állítjuk, mivel még nincsenek kiszámolva
 
     for _ in range(iterations):  # genetikus algoritmus ismétlése iterációszor (mutáció, rekombináció, majd túlélés)
-        population, population_lengths, route_order_in_population = genetic_algorithm(generations, population,
-                                                                                      population_lengths, best_route,
-                                                                                      initial_routes,
-                                                                                      city_distance_matrix)
+        population, population_lengths, generation_order_in_population = genetic_algorithm(generations, population,
+                                                                                           population_lengths,
+                                                                                           best_routes, initial_routes,
+                                                                                           city_distance_matrix)
         # genetikus algoritmus után generációk alapján túlélési valség számítása
-        best_route, best_solution, best_solution_total_length = get_solution_from_survival_probability(
-            population_lengths, generations, population, route_order_in_population, best_route,
-            best_solution_total_length, best_solution)  # túlélési esély alapján választunk új generáció alapot
+        best_routes, best_routes_total_length = get_solution_from_survival_probability(
+            population_lengths, generations, population, generation_order_in_population, best_routes,
+            best_routes_total_length)  # túlélési esély alapján választunk új generáció alapot
 
-        if best_solution_total_length < best_route_previous_length:  # ha a túlélt generáció útvonalának hossza csökkent
+        if best_routes_total_length < best_routes_previous_length:  # ha a túlélt generáció útvonalának hossza csökkent
             age_of_best_routes = 1
-            best_route_previous_length = best_solution_total_length
+            best_routes_previous_length = best_routes_total_length
+            print("\nA better all-time generation (solution) has been found!" +
+                  "\nThe route is the following:", str(best_routes) +
+                  "\nThe route's total length is", str(best_routes_total_length) + " units.\n")
         else:  # ha nem történt útvonalhosszbeli javulás
             age_of_best_routes += 1
             if age_of_best_routes > 350:
-                print("The best solution did not get better for 350 iterations, therefore the algorithm stops.")
+                print("\n----------------------------------------------------------------------------------------\n"
+                      "The best solution did not get better for 350 iterations, therefore the algorithm stops."
+                      "\n----------------------------------------------------------------------------------------\n")
                 break
 
-    for i in range(len(best_solution)):
-        best_solution[i].append(0)  # ha akarjuk a végére a 0-át, ettől függetlenül számolunk a visszaúttal
-    return best_solution, best_solution_total_length
+    for i in range(len(best_routes)):
+        best_routes[i].append(0)  # ha akarjuk a végére a 0-át, ettől függetlenül számolunk a visszaúttal
+    return best_routes, best_routes_total_length
 
 
 def fitness(city_distance_matrix: dict[tuple[int, int]], route: list[int]) -> int:  # TSP alapkód alapján
@@ -61,7 +65,7 @@ def fitness(city_distance_matrix: dict[tuple[int, int]], route: list[int]) -> in
 
 
 def genetic_algorithm(generations: int, population: list[list[list[int]]], population_lengths: list[int],
-                      best_route: list[list[int]], initial_routes: list[list[int]],
+                      best_routes: list[list[int]], initial_routes: list[list[int]],
                       city_distance_matrix: dict[tuple[int, int]])\
         -> Tuple[list[list[list[int]]], list[int], list[int]]:  # genetikus algoritmus
 
@@ -69,7 +73,7 @@ def genetic_algorithm(generations: int, population: list[list[list[int]]], popul
     length = []  # a generációk ebben a tömbben tárolódnak el (rendezve)
 
     for i in range(generations):  # feltöltjük adatokkal a változókat
-        population[i] = deepcopy(best_route)  # ide kell a deepcopy!
+        population[i] = deepcopy(best_routes)  # ide kell a deepcopy, fú de utálom a Pythont
         population_lengths[i] = 0  # még nem számoltunk hosszt, így nullával töltjük fel mind
         route_order_in_population += [i]  # a generációk sorrendje
         length += [0]
@@ -90,9 +94,9 @@ def genetic_algorithm(generations: int, population: list[list[list[int]]], popul
     return population, population_lengths, route_order_in_population
 
 
-def mutation(routes: list[list[int]], population: list[list[int]]) \
-        -> list[list[int]]:  # TSP alapkód alapján bővítve VRP-re
-
+def mutation(routes: list[list[int]], population: list[list[int]]) -> list[list[int]]:
+    # TSP alapkód alapján bővítve VRP-re
+    # Két random útvonal között megcserél egy-egy random várost
     if len(routes) <= 1:  # Ha TSP a feladat
         route1 = 0
         route2 = 0
@@ -111,20 +115,20 @@ def mutation(routes: list[list[int]], population: list[list[int]]) \
     return population
 
 
-def crossover(route: int, routes1: list[list[int]], routes2: list[list[int]]) -> list[list[int]]:  # rekombináció
-    routes1 = delete_depo_from_array(routes1)  # paraméterként megadott 1. útvonalak
-    routes2 = delete_depo_from_array(routes2)  # paraméterként megadott 2. útvonalak
+def crossover(route: int, routes_1: list[list[int]], routes_2: list[list[int]]) -> list[list[int]]:  # rekombináció
+    routes_1 = delete_depot_from_array(routes_1)  # paraméterként megadott 1. útvonalak
+    routes_2 = delete_depot_from_array(routes_2)  # paraméterként megadott 2. útvonalak
     # ezek tartalmaznak 1-1 teljes megoldást, azaz több autót, több várost
 
-    routes2_size_counter = []  # 1-1 autó által látogatott városok száma. Fontos a későbbiekben a depó visszaadásához
-    routes2_cities = []  # a routes2 adatait tartalmazza, de 1 dimenziós vektorként, nem 2 dimenziós mátrixként
+    routes_2_size_counter = []  # 1-1 autó által látogatott városok száma. Fontos a későbbiekben a depó visszaadásához
+    routes2_cities = []  # a routes_2 adatait tartalmazza, de 1 dimenziós vektorként, nem 2 dimenziós mátrixként
     # 2 dimenzióban nehéz a rekombináció, ezért alakítunk át
 
     for i in range(route):  # itt alakítunk mátrixból vektorrá
-        routes2_size_counter.append(0)
-        for k in range(len(routes2[i])):  # végigmegyünk a route2 minden elemén
-            routes2_cities += [routes2[i][k]]  # hozzáadjuk a vektorunkhoz a mátrix minden elemét sorban
-            routes2_size_counter[i] += 1  # az adott indexhez incrementálunk, így tudjuk hány város tartozik hozzá
+        routes_2_size_counter.append(0)
+        for k in range(len(routes_2[i])):  # végigmegyünk a routes_2 minden elemén
+            routes2_cities += [routes_2[i][k]]  # hozzáadjuk a vektorunkhoz a mátrix minden elemét sorban
+            routes_2_size_counter[i] += 1  # az adott indexhez incrementálunk, így tudjuk hány város tartozik hozzá
 
     # random 2 pontot választunk a metszéshez
     if (int(route / 2)) == 0:  # ha TSP a feladat
@@ -135,19 +139,19 @@ def crossover(route: int, routes1: list[list[int]], routes2: list[list[int]]) ->
 
     pointer = 0  # a kivágott elemek kezdőpontja az első dimenzióban
     for i in range(first_part):
-        pointer += routes2_size_counter[i]
+        pointer += routes_2_size_counter[i]
 
     pointer_length = 0  # a kivágott elemek hossza az első dimenzióban
     for i in range(second_part):
-        pointer_length += routes2_size_counter[i]
+        pointer_length += routes_2_size_counter[i]
     pointer_length -= pointer  # ki kell vonni, hogy jó hosszúságban vágjunk ki
 
-    intersection = get_intersection_vector(first_part, second_part, routes1)  # a kivágott rész tárolása 1 dimenzióban
+    intersection = get_intersection_vector(first_part, second_part, routes_1)  # a kivágott rész tárolása 1 dimenzióban
 
     crossovered_array = get_crossovered_array(routes2_cities, first_part, second_part, intersection)
     # a már rekombinált adat 1 dimenzióban, később alakítjuk vissza 2 dimenzióra
 
-    final_array = get_final_array(routes2_size_counter, crossovered_array)  # vektor értékek visszaállítása mátrixsszá
+    final_array = get_final_array(routes_2_size_counter, crossovered_array)  # vektor értékek visszaállítása mátrixsszá
 
     return final_array
 
@@ -186,9 +190,10 @@ def get_crossovered_array(route: list[list[int]], first_part: int, second_part: 
 def get_final_array(route_sizes: list[int], crossovered_array: list[int]) -> list[list[int]]:
     #  1 dimenziós értékek visszaállítása 2 dimenzióssá
     index = 0
-    # vektor -> mátrix depóval
     temp_array = []  # 1-1 autó által tartalmazott városok vektora
-    final_array = []  # a temp_array segítségével jön létre, így minden indexe 1-1 autót tartalmaz. Ez a változó tartalmazza a visszaalakított 2 dimenziós mátrixot az 1 dimenziós vektorból
+    final_array = []  # a temp_array segítségével jön létre, így minden indexe 1-1 autót tartalmaz.
+    # Ez a változó tartalmazza a visszaalakított 2 dimenziós mátrixot az 1 dimenziós vektorból
+
     for i in range(len(route_sizes)):  # végigmegyünk az autók számán
         temp_array.append(0)  # visszarakjuk az első elemre a depót
         for k in range(route_sizes[i]):  # végigmegyünk az adott autó városszámán
@@ -221,16 +226,16 @@ def sort_array(length: list[int], order: list[int], generations: int):
 
 
 def get_solution_from_survival_probability(population_lengths: list[int], generations: int,
-                                           population: list[list[list[int]]], route_order_in_population: list[int],
-                                           best_route: list[list[int]], best_solution_total_length: int, best_solution)\
-        -> Tuple[list[list[int]], list[int], int]:  # túlélő generáció kiszámítása
+                                           population: list[list[list[int]]], generation_order_in_population: list[int],
+                                           best_routes: list[list[int]], best_routes_total_length: int)\
+        -> Tuple[list[list[int]], int]:  # túlélő generáció kiszámítása
 
-    # population_lengths: jelenlegi eredmény hossza
-    # population: jelenlegi eredmény
-    # route_order_in_population: jelenlegi eredmény sorrendje
-    # best_route: jelenlegi generáció által túlélt adat
-    # route_best_length: jelenlegi generáció által túlélt adat hossza
-    # route_all_length_best: összes generáció alatt megtalált legjobb hosszeredmény
+    # population_lengths: jelenlegi populáció hosszai (az útvonalak hosszai amiket feldolgozunk)
+    # generations: generációk száma
+    # population: jelenlegi populáció (útvonalak amiket feldolgozunk)
+    # generation_order_in_population: jelenlegi eredmény sorrendje
+    # best_routes: jelenlegi legjobb útvonal
+    # best_routes_total_length: jelenlegi legjobb útvonal hossza
 
     rand_num = random.random()  # túlélési esélyhez random szám
     survival_probability = 0.82  # konstans szám: 0 < survival_probability < 1
@@ -245,7 +250,8 @@ def get_solution_from_survival_probability(population_lengths: list[int], genera
         if counter == 0:  # ha ez első generáció (külön kell kezelnünk az elsőt és az utolsót)
             if rand_num < survival_probability:
                 ok = 1
-                best_route = population[route_order_in_population[counter]]
+                best_routes = population[generation_order_in_population[counter]]
+                best_routes_total_length = population_lengths[generation_order_in_population[counter]]
                 continue
             else:
                 rand_num -= survival_probability
@@ -253,7 +259,8 @@ def get_solution_from_survival_probability(population_lengths: list[int], genera
         else:  # ha nem az első, de nem is az utolsó
             if rand_num < (pow(1 - survival_probability, counter) * survival_probability):
                 ok = 1
-                best_route = population[route_order_in_population[counter]]
+                best_routes = population[generation_order_in_population[counter]]
+                best_routes_total_length = population_lengths[generation_order_in_population[counter]]
                 continue
             else:
                 rand_num -= (pow(1 - survival_probability, counter) * survival_probability)
@@ -261,26 +268,21 @@ def get_solution_from_survival_probability(population_lengths: list[int], genera
 
     # ha ok == 0, akkor a legrosszabb eredmény élte túl a generálást
     if ok == 0:
-        best_route = population[route_order_in_population[generations - 1]]
+        best_routes = population[generation_order_in_population[generations - 1]]
+        best_routes_total_length = population_lengths[generations - 1]
         counter -= 1
 
-    # ha az új generáció jobb, mint a valaha megtalált legjobb eredmény, akkor elmentjük
-    if population_lengths[route_order_in_population[counter]] < best_solution_total_length:
-        best_solution_total_length = population_lengths[route_order_in_population[counter]]
-        best_route = best_solution = population[route_order_in_population[counter]]
-        print("\nBetter generation has been found: ", str(best_route) + " --- Length: ", str(best_solution_total_length))
-
-    return best_route, best_solution, best_solution_total_length
+    return best_routes, best_routes_total_length
 
 
-def delete_depo_from_array(route_with_depot: list[list[int]]) -> list[list[int]]:
+def delete_depot_from_array(routes_with_depot: list[list[int]]) -> list[list[int]]:
     # kiszedjük a depót a feladatból
     # pl: [[0,2,5],[0,1,3],[0,4,6]] -> [[2,5],[1,3],[4,6]]
     route_without_depot = []
-    for i in range(len(route_with_depot)):
+    for i in range(len(routes_with_depot)):
         temp = []
-        for k in range(len(route_with_depot[i])):
-            if route_with_depot[i][k] != 0:
-                temp.append(route_with_depot[i][k])
+        for k in range(len(routes_with_depot[i])):
+            if routes_with_depot[i][k] != 0:
+                temp.append(routes_with_depot[i][k])
         route_without_depot.append(temp)
     return route_without_depot

@@ -47,7 +47,7 @@ def create_routes(car_count: int, city_distance_matrix: dict[tuple[int, int]], c
     current_city = [0 for _ in range(car_count)]
     while len(city_matrix) != len(visited_cities):  # addig megyünk, amíg ki nem osztottunk minden várost 1-1 autóhoz
         for i in range(car_count):  # végigmegyünk minden autón
-            if len(city_matrix) != len(visited_cities): # ellenőrizzük a kiosztott városok számát (végtelen ciklus elkerülése végett)
+            if len(city_matrix) != len(visited_cities): # ellenőrizzük a kiosztott városok számát végtelen ciklus miatt
                 position = get_nearest_city(city_distance_matrix, current_city[i], city_matrix,
                                             visited_cities)  # új város megkeresése
                 routes[i].append(position)
