@@ -22,7 +22,7 @@ Example:
 
 2. The program generates the cities' x and y coordinates randomly between 1 and 100, then stores them in a matrix, then creates another matrix for the distances between the cities. A starting order is then created, based on the cities distances from each other.
 
-3. The genetic algorithm begins, which - after filling the population with the initial data and calculating initial fitness values - does the following iteration times (*a maximum of 350 iterations, if there are no improvements consecutively*):
+3. The genetic algorithm begins, which - after filling the population with the initial data and calculating initial fitness values - does the following iteration times (*has a random maximum iteration limit, if the best result does not improve for a long time*):
 
      - executes mutation, which swaps two cities between two vehicles
      - executes crossover (recombination), which selects two adjacent (at the last iteration, the first and last) generations, creates an intersection, then creates a merge generation
@@ -79,7 +79,7 @@ Példa:
 
 2. A program 1 és 100 között véletlenszerűen legenerálja a városok x és y koordinátáit, letárolja őket egy mátrixba, majd pedig egy újabb mátrixot készít a városok közti távolságokból. Ezután a járműveknek ki lesznek osztva a városok, figyelembevéve az egymástól való távolságukat.
 
-3. Elindul a genetikus algoritmus, mely - miután feltölti a populációt a kezdeti adatokkal és kezdeti fitness értéket számol - iterációszor (*maximum 350-szer, ha nem történik javulás*) végrehajtja röviden az alábbiakat:
+3. Elindul a genetikus algoritmus, mely - miután feltölti a populációt a kezdeti adatokkal és kezdeti fitness értéket számol - iterációszor (*random beépített iteráció limittel, ha nem javulna a megoldás sok időn át*) végrehajtja röviden az alábbiakat:
 
      - végrehajtja a mutációt, mely két autó között két várost felcserél
      - végrehajtja a keresztezést (rekombinációt), mely kiválaszt két egymás melletti (a végén az utolsó és az első) generációt, készít egy kimetszést, majd készít egy egyesített útvonalat

@@ -9,6 +9,8 @@ def begin_algorithm(initial_routes: list[list[int]], city_distance_matrix: dict[
     best_routes = []  # egy generálás által túlélt generáció
     best_routes_total_length = 0  # a túlélt generáció hossza
     age_of_best_routes = 0  # a túlélt generáció életkora
+    age_limit_of_best_routes = random.randint(1000, 5000)  # a túlélt generáció életkorának korlátja
+    print("The age (iteration) limit of the best routes is: " + str(age_limit_of_best_routes))
 
     for i in range(len(initial_routes)):  # feltöltjük a változókat a kiindulási adatokkal
         best_routes.append(initial_routes[i])
@@ -40,9 +42,9 @@ def begin_algorithm(initial_routes: list[list[int]], city_distance_matrix: dict[
                   "\nThe route's total length is", str(best_routes_total_length) + " units.\n")
         else:  # ha nem történt útvonalhosszbeli javulás
             age_of_best_routes += 1
-            if age_of_best_routes > 350:
+            if age_of_best_routes > age_limit_of_best_routes:
                 print("\n----------------------------------------------------------------------------------------\n"
-                      "The best solution did not get better for 350 iterations, therefore the algorithm stops."
+                      "The best solution did not get better for " + str(age_limit_of_best_routes) + " iterations, therefore the algorithm stops."
                       "\n----------------------------------------------------------------------------------------\n")
                 break
 
