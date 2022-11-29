@@ -26,6 +26,7 @@ Example:
 
      - executes mutation, which swaps two cities between two vehicles
      - executes crossover (recombination), which selects two adjacent (at the last iteration, the first and last) generations, creates an intersection, then creates a merge generation
+       - the intersection part is being cut from the second generation (route), and it is being inserted into the first generation
        - since crossover is hard in 2D, the recombination is made in a vector form, but it will be converted back to a matrix
        - the depot is removed temporarily from the routes until the procedure ends, but then it is readded
      - selects the best generation based on surviving probability, which can be considered a solution, albeit not necessarily the best and final one
@@ -82,6 +83,7 @@ Példa:
 
      - végrehajtja a mutációt, mely két autó között két várost felcserél
      - végrehajtja a keresztezést (rekombinációt), mely kiválaszt két egymás melletti (a végén az utolsó és az első) generációt, készít egy kimetszést, majd készít egy egyesített útvonalat
+       - a kimetszés a második generációból (útvonalból) történik, és az első útvonalba kerül beillesztésre
        - mivel 2D-ben nehéz a keresztezés, vektor formában lesz végrehajtva a rekombináció, a folyamat végén kerül visszaalakításra mátrixszá
        - a depót eltávolítja átmenetileg a folyamat erejéig, majd visszateszi azt
      - túlélési valószínűség alapján kiválasztjuk a legjobb generációt, mely egy kész megoldásnak tekinthető, de nem feltétlenül a legjobbnak és a véglegesnek
